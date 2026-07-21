@@ -331,7 +331,6 @@ and manually install anything the installer reports as unavailable.
 - `TOOLS.md` — tool-by-tool explanations and troubleshooting.
 - `requirements.txt` — dependency manifest.
 - `install.sh` — best-effort dependency installer/checker.
-- `SKILL.md` — instructions for compatible CLI-based AI agents.
 - `sub_enum.sh` — main reconnaissance script.
 
 ## Legal and authorization notice
