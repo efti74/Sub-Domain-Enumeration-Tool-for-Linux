@@ -1,0 +1,19 @@
+# Dependency manifest (not pip)
+bash
+curl
+jq
+git
+go
+subfinder
+amass
+assetfinder
+findomain
+sublist3r
+gobuster
+puredns
+massdns
+alterx
+dnsx
+projectdiscovery-httpx
+ffuf
+SecLists
