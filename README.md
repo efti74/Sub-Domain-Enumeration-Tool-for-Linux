@@ -1,338 +1,350 @@
-# Sub Domain Enumeration
+# 🔍 Sub Domain Enumeration Tool for Linux
 
-**Created by Efti74**
+A powerful Bash-based subdomain enumeration tool that automates passive and active reconnaissance for bug bounty hunting, penetration testing, and security assessments.
 
-A Bash-based subdomain reconnaissance workflow for **authorized bug-bounty and penetration-testing scopes**. It combines passive discovery, active DNS enumeration, permutation generation, DNS validation, HTTP/HTTPS probing, status-code collection, and optional VHost discovery.
+Designed for **Kali Linux**, **Ubuntu**, **Debian**, **Parrot OS**, and other Linux distributions.
 
-> **Important:** Install and verify the required tools **before running `./sub_enum.sh`**. If dependencies are missing, some enumeration stages will be skipped or may not work correctly.
+---
 
-## 1. Clone the repository
+## ✨ Features
 
-```bash
-git clone <YOUR-GITHUB-REPOSITORY-URL>
-cd <YOUR-REPOSITORY-NAME>
-```
+- Passive Subdomain Enumeration
+  - Subfinder
+  - Assetfinder
+  - Amass
+  - Findomain
+  - Sublist3r
+  - crt.sh
 
-Replace the placeholders above with the actual GitHub repository URL and directory name after publishing.
+- Active Enumeration
+  - Gobuster
+  - PureDNS
 
-## 2. Make the scripts executable
+- DNS Validation
+  - dnsx
+  - PureDNS
 
-```bash
-chmod +x install.sh sub_enum.sh
-```
+- Subdomain Permutation
+  - AlterX
 
-## 3. Install required tools first
+- HTTP Probing
+  - ProjectDiscovery httpx
+  - Status Code
+  - IP Address
+  - Title
+  - CNAME
+  - Technologies
 
-Run the included dependency installer **before the reconnaissance script**:
+- Optional Virtual Host Discovery
+  - ffuf
 
-```bash
-./install.sh
-```
+- Interactive Mode
 
-The installer attempts to install or detect the dependencies used by the workflow, including:
+- CLI Mode
 
-- Subfinder
-- Amass
-- Assetfinder
-- Findomain
-- Sublist3r
-- curl
-- jq
-- Gobuster
-- PureDNS
-- MassDNS
-- AlterX
-- dnsx
-- **ProjectDiscovery httpx**
-- ffuf
-- SecLists/wordlists
+- Automatic Tool Verification
 
-Package availability differs between Linux distributions. If a dependency cannot be installed automatically, `install.sh` prints a **warning**. Install every missing dependency manually from its official project/package source before starting a full reconnaissance run.
+- Organized Output Directory
 
-After installation, review the verification output. Do not ignore `[WARNING] ... missing` messages for tools you expect the workflow to use.
+---
 
-For detailed descriptions and troubleshooting, read [`TOOLS.md`](TOOLS.md).
+# Installation
 
-## 4. Verify the main script
-
-Before the first run:
+## Clone the Repository
 
 ```bash
-bash -n ./sub_enum.sh
+git clone https://github.com/efti74/Sub-Domain-Enumeration-Tool-for-Linux.git
+
+cd Sub-Domain-Enumeration-Tool-for-Linux
 ```
 
-If the command prints nothing, the Bash syntax is valid.
+---
 
-You can also view the available options:
+## Make Scripts Executable
 
 ```bash
-./sub_enum.sh --help
+chmod +x install.sh
+chmod +x sub_enum.sh
 ```
 
-## 5. Run Sub Domain Enumeration
+---
 
-### Recommended for beginners: interactive mode
-
-Simply run:
+## Install
 
 ```bash
-./sub_enum.sh
+./install.sh --install
 ```
 
-The script asks for the configuration interactively.
+The installer will
 
-Example:
+- Install required packages
+- Install Go-based tools
+- Verify dependencies
+- Install the command globally
 
-```text
-============================================================
-                 Sub Domain Enumeration
-                    Created by Efti74
-============================================================
-
-Interactive setup (optional fields can be skipped by pressing Enter)
-------------------------------------------------------------------
-Target domain (required, e.g. example.com): example.com
-Wordlist [optional - Enter = default]:
-PureDNS resolver list [optional - Enter = skip]:
-Base URL for ffuf [optional - Enter = skip]:
-Output directory [optional - Enter = automatic]:
-Threads [optional - Enter = 50]:
-Run active enumeration? [Y/n - Enter = Yes]:
-Enable ffuf VHost stage? [Y/n - Enter = Yes]:
-```
-
-Only the **target domain is required**. For optional questions, press **Enter** to use the default value or skip that feature.
-
-Enter the root domain, for example:
-
-```text
-example.com
-```
-
-Do not enter an arbitrary URL path such as:
-
-```text
-https://example.com/login/page
-```
-
-The optional **Base URL** prompt is specifically for ffuf VHost discovery and can accept a value such as:
-
-```text
-https://example.com
-```
-
-### Command-line mode
-
-You can bypass the interactive questions by supplying arguments.
-
-Basic:
+After installation you can run
 
 ```bash
-./sub_enum.sh -d example.com
+sub_enum
 ```
 
-Custom wordlist:
+from **any directory**.
+
+---
+
+# Verify Installation
 
 ```bash
-./sub_enum.sh \
-  -d example.com \
-  -w /path/to/subdomains-wordlist.txt
+./install.sh --check
 ```
 
-Custom PureDNS resolver list:
+or
 
 ```bash
-./sub_enum.sh \
-  -d example.com \
-  -r /path/to/resolvers.txt
+sub_enum --help
 ```
 
-Optional ffuf VHost discovery:
+---
+
+# Update Installed Tools
 
 ```bash
-./sub_enum.sh \
-  -d example.com \
-  -u https://example.com
+./install.sh --update
 ```
 
-Custom output directory:
+---
+
+# Uninstall
 
 ```bash
-./sub_enum.sh \
-  -d example.com \
-  -o recon_example
+./install.sh --uninstall
 ```
 
-Custom concurrency:
+---
+
+# Usage
+
+## Interactive Mode
+
+Simply run
 
 ```bash
-./sub_enum.sh \
-  -d example.com \
-  -t 100
+sub_enum
 ```
 
-Passive/lower-noise mode:
+You will be prompted for
+
+- Target Domain
+- Wordlist
+- Resolver List
+- Output Directory
+- Threads
+- Active Enumeration
+- Virtual Host Scan
+
+---
+
+## Command Line Mode
+
+Example
 
 ```bash
-./sub_enum.sh \
-  -d example.com \
-  --no-active
+sub_enum -d example.com
 ```
 
-Disable only ffuf:
+Example
 
 ```bash
-./sub_enum.sh \
-  -d example.com \
-  --no-ffuf
+sub_enum -d example.com \
+-w wordlists/subdomains.txt \
+-r resolvers/resolvers.txt \
+-o recon_example
 ```
 
-## 6. Recommended first-run sequence
+---
 
-For a new Linux installation, follow this exact order:
+# Workflow
 
-```bash
-# 1. Enter the cloned repository
-cd <YOUR-REPOSITORY-NAME>
-
-# 2. Make scripts executable
-chmod +x install.sh sub_enum.sh
-
-# 3. Install/check dependencies
-./install.sh
-
-# 4. Resolve every important MISSING/WARNING dependency
-#    shown by install.sh before continuing.
-
-# 5. Validate Bash syntax
-bash -n ./sub_enum.sh
-
-# 6. Start interactive reconnaissance
-./sub_enum.sh
+```
+                    Target Domain
+                           │
+          ─────────────────┼─────────────────
+                           │
+              Passive Enumeration
+                           │
+     ┌─────────────────────────────────────┐
+     │                                     │
+Subfinder  Assetfinder  Amass  Findomain  crt.sh
+     │                                     │
+     └─────────────────────────────────────┘
+                           │
+                    Merge & Deduplicate
+                           │
+                     Active Enumeration
+                   Gobuster + PureDNS
+                           │
+                      AlterX Permutation
+                           │
+                      DNS Validation
+                     dnsx / PureDNS
+                           │
+                      HTTP Probing
+                          httpx
+                           │
+                Optional VHost Discovery
+                           │
+                           ffuf
+                           │
+                       Final Results
 ```
 
-Or, after dependencies are ready:
+---
 
-```bash
-./sub_enum.sh -d example.com
+# Output Structure
+
+```
+recon_example/
+
+│
+├── passive_unique.txt
+├── all_candidates_unique.txt
+├── resolved_subdomains.txt
+├── dns_records.txt
+├── httpx.jsonl
+├── live_urls.txt
+├── live_with_status.txt
+├── dns_alive_but_no_http.txt
+├── vhost_candidates_ffuf.txt
+│
+└── raw/
 ```
 
-## 7. Critical ProjectDiscovery httpx check
+---
 
-There are multiple programs named `httpx`. This project requires **ProjectDiscovery httpx**, not the Python HTTPX CLI.
+# Manual Dependencies
 
-Before your first full run, verify:
+Some tools may require manual installation depending on your Linux distribution.
+
+## Findomain
+
+https://github.com/findomain/findomain/releases
+
+---
+
+## MassDNS
+
+https://github.com/blechschmidt/massdns
+
+---
+
+## SecLists
+
+https://github.com/danielmiessler/SecLists
+
+---
+
+# Troubleshooting
+
+## Wrong httpx Installed
+
+If you see
+
+```
+No such option: -l
+```
+
+or
+
+```
+Error: No such option: -status-code
+```
+
+you are probably using the **Python HTTPX package**.
+
+Check
 
 ```bash
 type -a httpx
-httpx -h 2>&1 | grep -E -- '-l|-status-code|-json'
 ```
 
-The correct tool supports options such as:
+The correct binary should be the **ProjectDiscovery** version.
 
-```text
--l
--status-code
--json
-```
+---
 
-If you get:
+## Go PATH
 
-```text
-Error: No such option: -l
-```
-
-the wrong `httpx` is being executed.
-
-If ProjectDiscovery httpx was installed using Go, try:
+If Go tools are not found
 
 ```bash
-export PATH="$HOME/go/bin:$PATH"
-hash -r
+echo 'export PATH=$HOME/go/bin:$PATH' >> ~/.bashrc
+
+source ~/.bashrc
 ```
 
-Then verify again:
+For Zsh
 
 ```bash
-httpx -version
-httpx -h 2>&1 | grep -E -- '-l|-status-code|-json'
+echo 'export PATH=$HOME/go/bin:$PATH' >> ~/.zshrc
+
+source ~/.zshrc
 ```
 
-See `TOOLS.md` for more troubleshooting.
+---
 
-## 8. Wordlist note
-
-SecLists paths vary between Linux distributions.
-
-If the default wordlist configured in the script does not exist, locate your installed DNS wordlist and provide it explicitly:
+## Verify Installed Tools
 
 ```bash
-./sub_enum.sh \
-  -d example.com \
-  -w /path/to/subdomains-top1million-20000.txt
+./install.sh --check
 ```
 
-Before using a custom wordlist:
+---
 
-```bash
-test -f /path/to/wordlist.txt && wc -l /path/to/wordlist.txt
-```
+# Recommended Environment
 
-## 9. Understanding the results
+- Kali Linux
+- Debian
+- Ubuntu
+- Parrot OS
 
-The result directory contains files such as:
+---
 
-```text
-passive_unique.txt
-all_candidates_unique.txt
-resolved_subdomains.txt
-dns_records.txt
-httpx.jsonl
-live_urls.txt
-live_with_status.txt
-dns_alive_but_no_http.txt
-vhost_candidates_ffuf.txt
-raw/
-```
+# Disclaimer
 
-Important files:
+This tool is intended **only for authorised security assessments, penetration testing, educational purposes, and bug bounty programmes where you have permission to test**.
 
-- **`resolved_subdomains.txt`** — main DNS-validated subdomain inventory when DNS validation tools are available.
-- **`live_urls.txt`** — HTTP/HTTPS-responsive URLs.
-- **`live_with_status.txt`** — live URL information including HTTP status and other collected metadata.
-- **`httpx.jsonl`** — structured ProjectDiscovery httpx output.
-- **`dns_alive_but_no_http.txt`** — DNS-resolving hosts that did not respond to HTTP/HTTPS probing.
-- **`vhost_candidates_ffuf.txt`** — VHost candidates; these are kept separate from DNS subdomains.
-- **`raw/`** — per-tool and intermediate results useful for troubleshooting.
+The author is **not responsible** for any misuse or damage caused by this software.
 
-An empty file does **not always mean zero findings**. A tool may have been missing, skipped, timed out, or failed. Check terminal warnings and `TOOLS.md` before interpreting empty results.
+Always obtain proper authorisation before testing any target.
 
-## Dependency manifest
+---
 
-`requirements.txt` lists the project dependencies, but it is **not a Python pip requirements file**.
+# Contributing
 
-Do not use:
+Contributions are welcome.
 
-```bash
-pip install -r requirements.txt
-```
+If you find a bug or have an idea for improvement:
 
-Most dependencies are Linux/Go security tools. Use:
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Open a Pull Request
 
-```bash
-./install.sh
-```
+---
 
-and manually install anything the installer reports as unavailable.
+# Author
 
-## Documentation
+**Md. Sibgatur Rahman Efti**
 
-- `README.md` — installation and usage instructions.
-- `TOOLS.md` — tool-by-tool explanations and troubleshooting.
-- `requirements.txt` — dependency manifest.
-- `install.sh` — best-effort dependency installer/checker.
-- `sub_enum.sh` — main reconnaissance script.
+GitHub
 
-## Legal and authorization notice
+https://github.com/efti74
 
-Use this project only on domains and systems you are explicitly authorized to test. Follow the target's bug-bounty or penetration-testing scope, automation restrictions, and rate limits. You are responsible for complying with applicable laws and program rules.
+---
+
+# License
+
+This project is licensed under the MIT License.
+
+---
+
+⭐ If you find this project useful, consider giving it a star.
