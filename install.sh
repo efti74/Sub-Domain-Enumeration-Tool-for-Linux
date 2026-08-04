@@ -124,6 +124,38 @@ EOF
 trap 'error "Installation failed on line $LINENO"' ERR
 
 ########################################
+# Disk Space Check   <-- ADD HERE
+########################################
+
+check_disk_space() {
+
+    local required=2097152
+    local available
+
+    available=$(df --output=avail / | tail -1)
+
+    if [ "$available" -lt "$required" ]; then
+
+        echo
+        echo "===================================================="
+        echo "[ERROR] Insufficient Disk Space"
+        echo "===================================================="
+        echo
+        echo "Root Filesystem : $(df -h / | awk 'NR==2 {print $1}')"
+        echo "Available Space : $(df -h / | awk 'NR==2 {print $4}')"
+        echo "Required Space  : 2 GB (minimum recommended)"
+        echo
+        echo "Please free some disk space and run:"
+        echo
+        echo "    ./install.sh --install"
+        echo
+        echo "===================================================="
+
+        exit 1
+    fi
+}
+
+########################################
 # Root Check
 ########################################
 
@@ -494,6 +526,8 @@ verify_path() {
 perform_install() {
 
     banner
+
+    check_disk_space
 
     need_sudo
 
